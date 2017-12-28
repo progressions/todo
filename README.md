@@ -10,17 +10,15 @@ Install it yourself as:
 
 ## Usage
 
-usage: todo <command> [<args>]
+    usage: todo \<command> [<args>]
 
-    create             Create a new todo list
-    item <list_id>     Create an item for a specific list
-    delete <list_id>   Delete a list
-    help               Show usage information
-    list <list_id>     Show a specific list
-    lists              Show all todo lists
-    update <list_id>   Update the name of a list
-
-
+        create <name>           Create a new todo list
+        item <list_id> <name>   Create an item for a specific list
+        delete <list_id>        Delete a list
+        help                    Show usage information
+        list <list_id>          Show a specific list
+        lists                   Show all todo lists
+        update <list_id>        Update the name of a list
 
 ## Development
 

@@ -3,6 +3,8 @@ module Todo
     class << self
       def show_all(lists)
         tab = 42
+
+        puts "name #{' '*38} id"
         puts "-"*80
 
         lists.each do |list|

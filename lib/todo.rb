@@ -16,9 +16,9 @@ module Todo
       when "lists"
         all_lists
       when "create"
-        create_list
+        create_list(name: ARGV[1])
       when "item"
-        create_item(list_id: ARGV[1])
+        create_item(list_id: ARGV[1], name: ARGV[2])
       else
         puts help
       end
@@ -32,12 +32,17 @@ module Todo
     end
 
     def all_lists
+      lists = get_all_lists
+      List.show_all(lists)
+    end
+
+    def get_all_lists
       lists = client.lists
 
       path = [Dir.tmpdir, "lists.json"].join("/")
       File.write(path, lists.to_json)
 
-      List.show_all(lists)
+      lists
     end
 
     def show_list(id:)
@@ -76,19 +81,15 @@ module Todo
       puts
     end
 
-    def create_list
-      name = question("Enter name for the new list: ")
-
+    def create_list(name:)
       list = client.create_list(name: name)
       List.show(list)
+      get_all_lists
     end
 
-    def create_item(list_id:)
+    def create_item(list_id:, name:)
       list_id = find_list_id(list_id)
       if list_id
-
-        name = question("Enter name for the new item: ")
-
         item = client.create_item(list_id: list_id, name: name)
 
         show_list(id: list_id)
@@ -135,13 +136,13 @@ module Todo
       <<~END
       usage: todo <command> [<args>]
 
-         create             Create a new todo list
-         item <list_id>     Create an item for a specific list
-         delete <list_id>   Delete a list
-         help               Show usage information
-         list <list_id>     Show a specific list
-         lists              Show all todo lists
-         update <list_id>   Update the name of a list
+          create <name>           Create a new todo list
+          item <list_id> <name>   Create an item for a specific list
+          delete <list_id>        Delete a list
+          help                    Show usage information
+          list <list_id>          Show a specific list
+          lists                   Show all todo lists
+          update <list_id>        Update the name of a list
 
       END
     end
