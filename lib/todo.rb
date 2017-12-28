@@ -135,13 +135,13 @@ module Todo
       <<~END
       usage: todo <command> [<args>]
 
-         lists              Show all todo lists
          create             Create a new todo list
-         list <list_id>     Show a specific list
          item <list_id>     Create an item for a specific list
-         update <list_id>   Update the name of a list
          delete <list_id>   Delete a list
          help               Show usage information
+         list <list_id>     Show a specific list
+         lists              Show all todo lists
+         update <list_id>   Update the name of a list
 
       END
     end
