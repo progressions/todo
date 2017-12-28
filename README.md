@@ -10,7 +10,7 @@ Install it yourself as:
 
 ## Usage
 
-    usage: todo \<command> [<args>]
+    usage: todo <command> [<args>]
 
         create <name>           Create a new todo list
         item <list_id> <name>   Create an item for a specific list
