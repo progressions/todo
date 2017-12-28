@@ -1,0 +1,10 @@
+lib/todoable.rb 69deb8956c22a073cd50254bc019bfde91d8f4db
+lib/todoable/item.rb 8d1cf4e4fa192d7efe0e2f1af45c834740a2551a
+lib/todoable/list.rb a6de01a3458a1c935890af7568fc2b7c6c4e2ccb
+lib/todoable/model.rb 36d2aa474e162da6477680614ac43fea9e4dfbf4
+lib/todoable/client.rb 94647fa2141244fb57231eee0ee9fb056c8c69e8
+lib/todoable/models.rb 3f8735186371b7c10adc91a5ddbc5ec815d3e2a6
+lib/todoable/version.rb 1ab72fcc53c695e37514037db14436dc171bb3e3
+lib/todoable/client/items.rb b98b53922d2c0f4848c5e0c11279ae8d207a6efe
+lib/todoable/client/lists.rb 4c17ecf716cd26920a0dfe679aaabf78e2a7df64
+lib/todoable/configuration.rb 9be58e26e317337509e9f52d37e9c2d075190e95
