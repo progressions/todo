@@ -141,6 +141,7 @@ module Todo
          item <list_id>     Create an item for a specific list
          update <list_id>   Update the name of a list
          delete <list_id>   Delete a list
+         help               Show usage information
 
       END
     end
