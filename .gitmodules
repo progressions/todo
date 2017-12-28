@@ -1,0 +1,3 @@
+[submodule "lib/todoable"]
+	path = lib/todoable
+	url = https://github.com/progressions/todoable

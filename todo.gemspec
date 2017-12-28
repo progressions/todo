@@ -18,9 +18,22 @@ Gem::Specification.new do |spec|
   end
   spec.bindir        = "bin"
   spec.executables   = ["todo"]
-  spec.require_paths = ["lib"]
+  spec.require_paths = ["lib", "lib/todoable/lib"]
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+
+  # get an array of submodule dirs by executing 'pwd' inside each submodule
+  gem_dir = File.expand_path(File.dirname(__FILE__)) + "/"
+  `git submodule --quiet foreach pwd`.split($\).each do |submodule_path|
+    Dir.chdir(submodule_path) do
+      submodule_relative_path = submodule_path.sub gem_dir, ""
+      # issue git ls-files in submodule's directory and
+      # prepend the submodule path to create absolute file paths
+      `git ls-files`.split($\).each do |filename|
+        spec.files << "#{submodule_relative_path}/#{filename}"
+      end
+    end
+  end
 end
