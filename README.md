@@ -8,6 +8,13 @@ Install it yourself as:
 
     $ gem install todo
 
+## Authentication
+
+To make this a quick and simpel proof of concept, authentication is handled through environment variables.
+
+    $ export TODOABLE_USERNAME=username
+    $ export TODOABLE_PASSWORD=password
+
 ## Usage
 
     usage: todo <command> [<args>]
