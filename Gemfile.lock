@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/progressions/todoable
-  revision: 6a0920827b7b36bdd69bb8aefa41b2a852e4dc27
+  revision: a739bb74102c8ebb2dbdbbd7df5ffff50bf2e4e9
+  branch: token
   specs:
     todoable (0.2.0)
       activesupport

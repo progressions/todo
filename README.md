@@ -10,10 +10,9 @@ Install it yourself as:
 
 ## Authentication
 
-To make this a quick and simple proof of concept, authentication is handled through environment variables.
-
-    $ export TODOABLE_USERNAME=username
-    $ export TODOABLE_PASSWORD=password
+The command-line tool will ask for username and password, then it will
+store the username and your authentication token. When the token
+expires, you will be prompted to log in again.
 
 ## Usage
 
@@ -29,9 +28,14 @@ To make this a quick and simple proof of concept, authentication is handled thro
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then,
+run `rake spec` to run the tests. You can also run `bin/console` for an
+interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
+To release a new version, update the version number in `version.rb`, and then
+run `bundle exec rake release`, which will create a git tag for the version,
+push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
