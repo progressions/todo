@@ -32,11 +32,11 @@ RSpec.describe Todo do
   end
 
   before(:all) do
-    FileUtils.rm_r(todo_dir) if File.exists?(todo_dir)
+    FileUtils.rm_rf(todo_dir)
   end
 
   after(:all) do
-    FileUtils.rm_r(todo_dir) if File.exists?(todo_dir)
+    FileUtils.rm_rf(todo_dir)
   end
 
   it "has a version number" do
