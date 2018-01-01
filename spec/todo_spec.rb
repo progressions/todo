@@ -2,7 +2,22 @@ require "spec_helper"
 require "fileutils"
 
 RSpec.describe Todo do
-  let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01")) }
+  let(:lists_attributes) do
+    [
+      {"name" => "Christmas List", "src" => "http://todoable.teachable.tech/api/lists/123-abc", "id" => "123-abc"},
+      {"name" => "Birthday List", "src" => "http://todoable.teachable.tech/api/lists/456-def", "id" => "123-def"}
+    ]
+  end
+
+  let(:list_attributes) do
+    {
+      "name" => "Christmas List",
+      "src" => "http://todoable.teachable.tech/api/lists/123-abc",
+      "id" => "123-abc"
+    }
+  end
+
+  let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01"), lists: lists_attributes, get_list: list_attributes) }
   let(:user_config_path) { File.join(todo_dir, "user") }
   let(:lists_path) { File.join(todo_dir, "lists") }
 
@@ -41,15 +56,6 @@ RSpec.describe Todo do
   end
 
   describe ".all_lists" do
-    let(:lists_attributes) do
-      [
-        {"name" => "Christmas List", "src" => "http://todoable.teachable.tech/api/lists/123-abc", "id" => "123-abc"},
-        {"name" => "Birthday List", "src" => "http://todoable.teachable.tech/api/lists/456-def", "id" => "456-def"}
-      ]
-    end
-
-    let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01"), lists: lists_attributes) }
-
     it "gets username and password" do
       expect($stdin).to receive(:gets).and_return("username", "password")
       expect(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
@@ -92,16 +98,6 @@ RSpec.describe Todo do
   end
 
   describe ".show_list" do
-    let(:list_attributes) do
-      {
-        "name" => "Christmas List",
-        "src" => "http://todoable.teachable.tech/api/lists/123-abc",
-        "id" => "123-abc"
-      }
-    end
-
-    let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01"), get_list: list_attributes) }
-
     before(:each) do
       allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
     end
@@ -126,23 +122,6 @@ RSpec.describe Todo do
   end
 
   describe ".create_list" do
-    let(:lists_attributes) do
-      [
-        {"name" => "Christmas List", "src" => "http://todoable.teachable.tech/api/lists/123-abc", "id" => "123-abc"},
-        {"name" => "Birthday List", "src" => "http://todoable.teachable.tech/api/lists/456-def", "id" => "123-def"}
-      ]
-    end
-
-    let(:list_attributes) do
-      {
-        "name" => "Christmas List",
-        "src" => "http://todoable.teachable.tech/api/lists/123-abc",
-        "id" => "123-abc"
-      }
-    end
-
-    let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01"), lists: lists_attributes, get_list: list_attributes) }
-
     before(:each) do
       allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
     end
