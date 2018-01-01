@@ -102,6 +102,27 @@ asked to clarify:
       98d2510c-0eb7-4316-bfef-d38c762b1ffb
       98da6c1b-5cc6-4730-83b0-4e9aa84967a5
 
+### Finishing an item
+
+Finish an item by passing in a list ID and an item ID:
+
+    $ todo finish af0 abcc
+    Grocery List (af0a0005-cfd8-4a81-8dbe-392a2d7a7075)
+
+    Unfinished Items
+
+    name                                        id
+    --------------------------------------------------------------------------------
+    Ground beef ............................... 01b44cea-6958-4194-a857-4f89b20e3892
+    Hamburger buns ............................ 8a8acb9b-4545-475c-8ed3-4ab49728577e
+
+    Finished Items
+
+    name                                        id
+    --------------------------------------------------------------------------------
+    Spaghetti ................................. abcc8b46-a3e3-4a85-a6ac-1741bef39b66
+    Paper towels .............................. 51cc01ae-1701-440d-b3b9-2c3f66415cc6
+
 ## Further development
 
 This is a very rough proof of concept. If I were to develop this further, there are a
