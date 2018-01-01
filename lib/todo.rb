@@ -6,11 +6,11 @@ require "todo/item"
 require "todoable/lib/todoable"
 
 module Todo
-  class << self
-    TODO_DIR = File.join(Dir.home, ".todo")
-    USER_CONFIG_PATH = File.join(TODO_DIR, "user")
-    LISTS_PATH = File.join(TODO_DIR, "lists")
+  TODO_DIR = File.join(Dir.home, ".todo")
+  USER_CONFIG_PATH = File.join(TODO_DIR, "user")
+  LISTS_PATH = File.join(TODO_DIR, "lists")
 
+  class << self
     def run(args: {})
       verify_todo_dir
 
