@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "fakefs"
 
   # get an array of submodule dirs by executing 'pwd' inside each submodule
   gem_dir = File.expand_path(File.dirname(__FILE__)) + "/"
