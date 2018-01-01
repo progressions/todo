@@ -115,4 +115,4 @@ push git commits and tags, and push the `.gem` file to [rubygems.org](https://ru
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/todo.
+Bug reports and pull requests are welcome on GitHub at https://github.com/progressions/todo.
