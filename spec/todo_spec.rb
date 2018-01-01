@@ -2,18 +2,22 @@ require "spec_helper"
 require "fileutils"
 
 RSpec.describe Todo do
+  def todo_dir
+    @todo_dir ||= File.expand_path(".todo", "spec")
+  end
+
   before(:each) do
-    stub_const("Todo::TODO_DIR", File.expand_path(".todo", "spec"))
-    stub_const("Todo::USER_CONFIG_PATH", File.expand_path(".todo/user", "spec"))
-    stub_const("Todo::LISTS_PATH", File.expand_path(".todo/lists", "spec"))
+    stub_const("Todo::TODO_DIR", todo_dir)
+    stub_const("Todo::USER_CONFIG_PATH", File.join(todo_dir, "user"))
+    stub_const("Todo::LISTS_PATH", File.join(todo_dir, "lists"))
   end
 
   before(:all) do
-    FileUtils.rm_r(File.expand_path(".todo", "spec"))
+    FileUtils.rm_r(todo_dir) if File.exists?(todo_dir)
   end
 
   after(:all) do
-    FileUtils.rm_r(File.expand_path(".todo", "spec"))
+    FileUtils.rm_r(todo_dir) if File.exists?(todo_dir)
   end
 
   it "has a version number" do
