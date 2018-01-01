@@ -3,6 +3,8 @@ require "fileutils"
 
 RSpec.describe Todo do
   let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01")) }
+  let(:user_config_path) { File.join(todo_dir, "user") }
+  let(:lists_path) { File.join(todo_dir, "lists") }
 
   def todo_dir
     @todo_dir ||= File.expand_path(".todo", "spec")
@@ -54,6 +56,20 @@ RSpec.describe Todo do
       Todo.run(args: ["lists"])
     end
 
+    it "caches token and expires_at" do
+      FileUtils.rm(user_config_path)
+
+      allow($stdin).to receive(:gets).and_return("username", "password")
+      allow(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
+
+      Todo.run(args: ["lists"])
+
+      user_config = YAML.load_file(user_config_path)
+      expect(user_config[:username]).to eq("username")
+      expect(user_config[:token]).to eq("abcdef")
+      expect(user_config[:expires_at].to_s).to eq("2081-01-01T00:00:00+00:00")
+    end
+
     it "uses cached token and expires_at after authentication" do
       expect(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
       Todo.run(args: ["lists"])
@@ -64,6 +80,13 @@ RSpec.describe Todo do
         allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
         expect { Todo.run(args: ["lists"]) }.to output(/Birthday List/).to_stdout
         expect { Todo.run(args: ["lists"]) }.to output(/Christmas List/).to_stdout
+      end
+
+      it "caches lists" do
+        Todo.run(args: ["lists"])
+
+        lists = YAML.load_file(lists_path)
+        expect(lists).to eq(lists_attributes)
       end
     end
   end
@@ -83,7 +106,7 @@ RSpec.describe Todo do
       allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
     end
 
-    it "prints lists" do
+    it "prints list" do
       expect { Todo.run(args: ["list", "123-abc"]) }.to output(/Christmas List/).to_stdout
     end
   end
