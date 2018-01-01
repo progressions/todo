@@ -2,4 +2,4 @@
 
 require "todo"
 
-Todo.run
+Todo.run(args: ARGV)

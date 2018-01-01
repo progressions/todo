@@ -9,22 +9,22 @@ module Todo
   class << self
     TODO_DIR = File.join(Dir.home, ".todo")
 
-    def run
+    def run(args:)
       verify_todo_dir
 
-      case ARGV[0]
+      case args[0]
       when "list"
-        show_list(id: ARGV[1])
+        show_list(id: args[1])
       when "update"
-        update_list(id: ARGV[1])
+        update_list(id: args[1])
       when "delete"
-        delete_list(id: ARGV[1])
+        delete_list(id: args[1])
       when "lists"
         all_lists
       when "create"
-        create_list(name: ARGV[1])
+        create_list(name: args[1])
       when "item"
-        create_item(list_id: ARGV[1], name: ARGV[2])
+        create_item(list_id: args[1], name: args[2])
       else
         puts help
       end
