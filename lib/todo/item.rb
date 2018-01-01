@@ -10,7 +10,7 @@ module Todo
         puts "Unfinished Items"
         puts
 
-        puts "f name #{' '*38} id"
+        puts "name #{' '*38} id"
         puts "-"*80
 
         show_items(unfinished_items)
@@ -20,7 +20,7 @@ module Todo
         puts "Finished Items"
         puts
 
-        puts "f name #{' '*38} id"
+        puts "name #{' '*38} id"
         puts "-"*80
 
         show_items(finished_items)
