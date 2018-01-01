@@ -11,8 +11,8 @@ Install it yourself as:
 ## Authentication
 
 The command-line tool will ask for username and password, then it will
-store the username and your authentication token. When the token
-expires, you will be prompted to log in again.
+store the username and your authentication token (but not the password).
+When the token expires, you will be prompted to log in again.
 
 ## Usage
 
