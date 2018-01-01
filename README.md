@@ -25,13 +25,14 @@ details.
 
     usage: todo <command> [<args>]
 
-        create <name>               Create a new todo list
-        item <list_id> <name>       Create an item for a specific list
-        delete <list_id>            Delete a list
-        help                        Show usage information
-        list <list_id>              Show a specific list
-        lists                       Show all todo lists
-        update <list_id> <name>     Update the name of a list
+        create <name>                 Create a new todo list
+        item <list_id> <name>         Create an item for a specific list
+        delete <list_id>              Delete a list
+        finish <list_id> <item_id>    Finish an item from a list
+        help                          Show usage information
+        list <list_id>                Show a specific list
+        lists                         Show all todo lists
+        update <list_id>              Update the name of a list
 
 ### Creating a list
 
@@ -101,6 +102,13 @@ asked to clarify:
       98d2510c-0eb7-4316-bfef-d38c762b1ffb
       98da6c1b-5cc6-4730-83b0-4e9aa84967a5
 
+## Further development
+
+This is a very rough proof of concept. If I were to develop this further, there are a
+couple of things I'd want to tackle first:
+
+- Improve handling of arguments, to avoid `if` statements and error messages scattered throughout the individual methods
+- Improve behavior of `find_list_id` and `find_item_id` methods, to reduce repetition and improve error-handling
 
 ## Development
 

@@ -17,7 +17,7 @@ RSpec.describe Todo do
     }
   end
 
-  let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01"), lists: lists_attributes, get_list: list_attributes) }
+  let(:mock_client) { double("mock client", lists: lists_attributes, get_list: list_attributes, authenticate!: ["abcdef", DateTime.parse("2081-01-01")]) }
   let(:user_config_path) { File.join(todo_dir, "user") }
   let(:lists_path) { File.join(todo_dir, "lists") }
 
