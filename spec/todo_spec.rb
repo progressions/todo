@@ -107,7 +107,21 @@ RSpec.describe Todo do
     end
 
     it "prints list" do
-      expect { Todo.run(args: ["list", "123-abc"]) }.to output(/Christmas List/).to_stdout
+      expect { Todo.run(args: ["list", "123-abc"]) }.to output("Christmas List (123-abc)\n\n").to_stdout
+    end
+
+    context "with matching id" do
+      let(:lists_attributes) do
+        [
+          {"name" => "Christmas List", "src" => "http://todoable.teachable.tech/api/lists/123-abc", "id" => "123-abc"},
+          {"name" => "Birthday List", "src" => "http://todoable.teachable.tech/api/lists/456-def", "id" => "123-def"}
+        ]
+      end
+
+      it "alerts the user if the ID given is too vague" do
+        File.open(lists_path, "w") { |f| f.write(lists_attributes.to_yaml) }
+        expect { Todo.run(args: ["list", "123"]) }.to output("The list_id you entered matches too many lists.\nDid you mean one of these?\n  123-abc\n  123-def\n\n").to_stdout
+      end
     end
   end
 end
