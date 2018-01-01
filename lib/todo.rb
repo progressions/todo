@@ -1,3 +1,5 @@
+require "io/console"
+require "yaml"
 require "todo/version"
 require "todo/list"
 require "todo/item"
@@ -5,7 +7,11 @@ require "todoable/lib/todoable"
 
 module Todo
   class << self
+    TODO_DIR = File.join(Dir.home, ".todo")
+
     def run
+      verify_todo_dir
+
       case ARGV[0]
       when "list"
         show_list(id: ARGV[1])
@@ -22,14 +28,41 @@ module Todo
       else
         puts help
       end
+    rescue Todoable::Unauthorized
+      puts "Unauthorized"
+      puts
+    end
+
+    def verify_todo_dir
+      Dir.mkdir(TODO_DIR) unless File.exists?(TODO_DIR)
     end
 
     def client
+      path = File.join(TODO_DIR, "user")
+      user_profile = YAML.load_file(path)
+
+      if user_profile[:token].nil?
+        username = question("Enter username: ")
+        password = question("Enter password: ", noecho: true)
+      end
+
       @client ||= Todoable::Client.new(
-        username: ENV["TODOABLE_USERNAME"],
-        password: ENV["TODOABLE_PASSWORD"]
+        username: username,
+        password: password,
       )
+
+      user_profile = {
+        username: username,
+        token: @client.token,
+      }
+
+      File.open(path, "w") do |f|
+        f.write(user_profile.to_yaml)
+      end
+
+      @client
     end
+
 
     def all_lists
       lists = get_all_lists
@@ -124,9 +157,13 @@ module Todo
       id
     end
 
-    def question(string)
+    def question(string, noecho: false)
       puts string
-      result = STDIN.gets.chomp
+      result = if noecho
+        STDIN.noecho(&:gets).chomp
+      else
+        STDIN.gets.chomp
+      end
       puts
 
       result
