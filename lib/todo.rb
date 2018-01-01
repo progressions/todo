@@ -173,9 +173,9 @@ module Todo
     def question(string, noecho: false)
       puts string
       result = if noecho
-        STDIN.noecho(&:gets).chomp
+        $stdin.noecho(&:gets).chomp
       else
-        STDIN.gets.chomp
+        $stdin.gets.chomp
       end
       puts
 
