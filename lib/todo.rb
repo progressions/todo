@@ -47,7 +47,7 @@ module Todo
 
       @client = Todoable::Client.new(
         token: user_profile[:token],
-        expires_at: DateTime.parse("2017-01-01") # user_profile[:expires_at]
+        expires_at: user_profile[:expires_at]
       )
     rescue Todoable::Unauthorized
       client_from_username
