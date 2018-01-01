@@ -112,7 +112,7 @@ RSpec.describe Todo do
 
       it "alerts the user if the ID given is too vague" do
         File.open(lists_path, "w") { |f| f.write(lists_attributes.to_yaml) }
-        expect { Todo.run(args: ["list", "123"]) }.to output("The list_id you entered matches too many lists.\nDid you mean one of these?\n  123-abc\n  123-def\n\n").to_stdout
+        expect { Todo.run(args: ["list", "123"]) }.to output("The ID you entered matches too many IDs.\nDid you mean one of these?\n  123-abc\n  123-def\n\n").to_stdout
       end
     end
   end
