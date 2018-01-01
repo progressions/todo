@@ -6,31 +6,33 @@ require "todo/item"
 require "todoable/lib/todoable"
 
 module Todo
-  class << self
-    TODO_DIR = File.join(Dir.home, ".todo")
+  TODO_DIR = File.join(Dir.home, ".todo")
+  USER_CONFIG_PATH = File.join(TODO_DIR, "user")
+  LISTS_PATH = File.join(TODO_DIR, "lists")
 
-    def run
+  class << self
+    def run(args: {})
       verify_todo_dir
 
-      case ARGV[0]
+      case args[0]
       when "list"
-        show_list(id: ARGV[1])
+        show_list(id: args[1])
       when "update"
-        update_list(id: ARGV[1])
+        update_list(id: args[1])
       when "delete"
-        delete_list(id: ARGV[1])
+        delete_list(id: args[1])
       when "lists"
         all_lists
       when "create"
-        create_list(name: ARGV[1])
+        create_list(name: args[1])
       when "item"
-        create_item(list_id: ARGV[1], name: ARGV[2])
+        create_item(list_id: args[1], name: args[2])
       else
-        puts help
+        $stdout.puts help
       end
     rescue Todoable::Unauthorized
-      puts "Unauthorized"
-      puts
+      $stdout.puts "Unauthorized"
+      $stdout.puts
     end
 
     def verify_todo_dir
@@ -38,9 +40,8 @@ module Todo
     end
 
     def client
-      path = File.join(TODO_DIR, "user")
-      if File.exists?(path)
-        user_profile = YAML.load_file(path)
+      if File.exists?(USER_CONFIG_PATH)
+        user_profile = YAML.load_file(USER_CONFIG_PATH)
 
         @client = Todoable::Client.new(
           token: user_profile[:token],
@@ -54,8 +55,6 @@ module Todo
     end
 
     def client_from_username
-      path = File.join(TODO_DIR, "user")
-
       username = question("Enter username: ")
       password = question("Enter password: ", noecho: true)
 
@@ -70,7 +69,7 @@ module Todo
         expires_at: @client.expires_at,
       }
 
-      File.open(path, "w") do |f|
+      File.open(USER_CONFIG_PATH, "w") do |f|
         f.write(user_profile.to_yaml)
       end
 
@@ -85,8 +84,7 @@ module Todo
     def get_all_lists
       lists = client.lists
 
-      path = [Dir.tmpdir, "lists.json"].join("/")
-      File.write(path, lists.to_json)
+      File.write(LISTS_PATH, lists.to_yaml)
 
       lists
     end
@@ -98,8 +96,8 @@ module Todo
         List.show(list)
       end
     rescue Todoable::NotFound
-      puts "List not found."
-      puts
+      $stdout.puts "List not found."
+      $stdout.puts
     end
 
     def update_list(id:)
@@ -111,20 +109,20 @@ module Todo
         show_list(id: id)
       end
     rescue Todoable::NotFound
-      puts "List not found."
-      puts
+      $stdout.puts "List not found."
+      $stdout.puts
     end
 
     def delete_list(id:)
       id = find_list_id(id)
       if id
         if client.delete_list(id: id)
-          puts "List deleted."
+          $stdout.puts "List deleted."
         end
       end
     rescue Todoable::NotFound
-      puts "List not found."
-      puts
+      $stdout.puts "List not found."
+      $stdout.puts
     end
 
     def create_list(name:)
@@ -143,41 +141,39 @@ module Todo
     end
 
     def find_list_id(id)
-      begin
-        if id.length < 36
-          path = [Dir.tmpdir, "lists.json"].join("/")
-          lists = JSON.parse(File.read(path))
+      return id unless File.exists?(LISTS_PATH)
+      return id unless id.length < 36
 
-          matches = lists.map { |l| l["id"] }.select do |list_id|
-            list_id.start_with?(id)
-          end
+      lists = YAML.load_file(LISTS_PATH)
 
-          if matches.length >= 2
-            puts "The list_id you entered matches too many lists."
-            puts "Did you mean one of these?"
-            matches.each do |match|
-              puts "  #{match}"
-            end
-            puts
+      matches = lists.map { |list| list["id"] }.select do |list_id|
+        list_id.start_with?(id)
+      end
 
-            id = false
-          elsif matches.length == 1
-            id = matches.first
-          end
+      if matches.length >= 2
+        $stdout.puts "The list_id you entered matches too many lists."
+        $stdout.puts "Did you mean one of these?"
+        matches.each do |match|
+          $stdout.puts "  #{match}"
         end
+        $stdout.puts
+
+        id = false
+      elsif matches.length == 1
+        id = matches.first
       end
 
       id
     end
 
     def question(string, noecho: false)
-      puts string
+      $stdout.puts string
       result = if noecho
-        STDIN.noecho(&:gets).chomp
+        $stdin.noecho(&:gets).chomp
       else
-        STDIN.gets.chomp
+        $stdin.gets.chomp
       end
-      puts
+      $stdout.puts
 
       result
     end
