@@ -39,8 +39,8 @@ module Todo
 
     def client
       path = File.join(TODO_DIR, "user")
-      user_profile = if File.exists?(path)
-        YAML.load_file(path)
+      if File.exists?(path)
+        user_profile = YAML.load_file(path)
 
         @client = Todoable::Client.new(
           token: user_profile[:token],
