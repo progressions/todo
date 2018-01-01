@@ -2,6 +2,10 @@
 
 Todo is a command-line tool made as a proof-of-concept for the 'todoable' gem.
 
+https://github.com/progressions/todoable
+
+The Todoable gem is a coding sample for Teachable.
+
 ## Installation
 
 Install it yourself as:
