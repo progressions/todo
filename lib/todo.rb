@@ -41,19 +41,25 @@ module Todo
       path = File.join(TODO_DIR, "user")
       user_profile = YAML.load_file(path)
 
-      if user_profile[:token].nil?
+      if user_profile[:token] && user_profile[:expires_at]
+        @client ||= Todoable::Client.new(
+          token: user_profile[:token],
+          expires_at: user_profile[:expires_at],
+        )
+      else
         username = question("Enter username: ")
         password = question("Enter password: ", noecho: true)
-      end
 
-      @client ||= Todoable::Client.new(
-        username: username,
-        password: password,
-      )
+        @client ||= Todoable::Client.new(
+          username: username,
+          password: password,
+        )
+      end
 
       user_profile = {
         username: username,
         token: @client.token,
+        expires_at: @client.expires_at,
       }
 
       File.open(path, "w") do |f|
