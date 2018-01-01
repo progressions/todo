@@ -1,11 +1,11 @@
 GIT
   remote: https://github.com/progressions/todoable
-  revision: a739bb74102c8ebb2dbdbbd7df5ffff50bf2e4e9
-  branch: token
+  revision: 0a39301ec3d5332f9a4c89913853170d2f45912f
+  tag: v0.3.0
   specs:
-    todoable (0.2.0)
-      activesupport
-      rest-client
+    todoable (0.3.0)
+      activesupport (~> 5.1.4)
+      rest-client (~> 2.0.2)
 
 PATH
   remote: .
