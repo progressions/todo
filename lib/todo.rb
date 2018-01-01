@@ -41,14 +41,14 @@ module Todo
       path = File.join(TODO_DIR, "user")
       user_profile = if File.exists?(path)
         YAML.load_file(path)
-      else
-        {}
-      end
 
-      @client = Todoable::Client.new(
-        token: user_profile[:token],
-        expires_at: user_profile[:expires_at]
-      )
+        @client = Todoable::Client.new(
+          token: user_profile[:token],
+          expires_at: user_profile[:expires_at]
+        )
+      else
+        client_from_username
+      end
     rescue Todoable::Unauthorized
       client_from_username
     end
