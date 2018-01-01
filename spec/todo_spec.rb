@@ -29,6 +29,7 @@ RSpec.describe Todo do
     stub_const("Todo::TODO_DIR", todo_dir)
     stub_const("Todo::USER_CONFIG_PATH", File.join(todo_dir, "user"))
     stub_const("Todo::LISTS_PATH", File.join(todo_dir, "lists"))
+    allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
   end
 
   before(:all) do
@@ -83,7 +84,6 @@ RSpec.describe Todo do
 
     context "when authenticated" do
       it "prints lists" do
-        allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
         expect { Todo.run(args: ["lists"]) }.to output(/Birthday List/).to_stdout
         expect { Todo.run(args: ["lists"]) }.to output(/Christmas List/).to_stdout
       end
@@ -98,10 +98,6 @@ RSpec.describe Todo do
   end
 
   describe ".show_list" do
-    before(:each) do
-      allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
-    end
-
     it "prints list" do
       expect { Todo.run(args: ["list", "123-abc"]) }.to output("Christmas List (123-abc)\n\n").to_stdout
     end
@@ -122,13 +118,24 @@ RSpec.describe Todo do
   end
 
   describe ".create_list" do
-    before(:each) do
-      allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
-    end
-
     it "creates list from arguments" do
       expect(mock_client).to receive(:create_list).with(name: "\"Christmas List\"").and_return(list_attributes)
       expect { Todo.run(args: ["create", "\"Christmas List\""]) }.to output("Christmas List (123-abc)\n\n").to_stdout
+    end
+  end
+
+  describe ".update_list" do
+    let(:list_attributes) do
+      {
+        "name" => "Shopping List",
+        "src" => "http://todoable.teachable.tech/api/lists/123-abc",
+        "id" => "123-abc"
+      }
+    end
+
+    it "creates list from arguments" do
+      expect(mock_client).to receive(:update_list).with(id: "123-abc", name: "\"Shopping List\"").and_return(list_attributes)
+      expect { Todo.run(args: ["update", "123-abc", "\"Shopping List\""]) }.to output("Shopping List (123-abc)\n\n").to_stdout
     end
   end
 end

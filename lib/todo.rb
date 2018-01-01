@@ -18,7 +18,7 @@ module Todo
       when "list"
         show_list(id: args[1])
       when "update"
-        update_list(id: args[1])
+        update_list(id: args[1], name: args[2])
       when "delete"
         delete_list(id: args[1])
       when "lists"
@@ -100,11 +100,9 @@ module Todo
       $stdout.puts
     end
 
-    def update_list(id:)
+    def update_list(id:, name:)
       id = find_list_id(id)
       if id
-        name = question("Enter new name for the list: ")
-
         client.update_list(id: id, name: name)
         show_list(id: id)
       end
