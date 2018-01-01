@@ -124,4 +124,32 @@ RSpec.describe Todo do
       end
     end
   end
+
+  describe ".create_list" do
+    let(:lists_attributes) do
+      [
+        {"name" => "Christmas List", "src" => "http://todoable.teachable.tech/api/lists/123-abc", "id" => "123-abc"},
+        {"name" => "Birthday List", "src" => "http://todoable.teachable.tech/api/lists/456-def", "id" => "123-def"}
+      ]
+    end
+
+    let(:list_attributes) do
+      {
+        "name" => "Christmas List",
+        "src" => "http://todoable.teachable.tech/api/lists/123-abc",
+        "id" => "123-abc"
+      }
+    end
+
+    let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01"), lists: lists_attributes, get_list: list_attributes) }
+
+    before(:each) do
+      allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
+    end
+
+    it "creates list from arguments" do
+      expect(mock_client).to receive(:create_list).with(name: "\"Christmas List\"").and_return(list_attributes)
+      expect { Todo.run(args: ["create", "\"Christmas List\""]) }.to output("Christmas List (123-abc)\n\n").to_stdout
+    end
+  end
 end
