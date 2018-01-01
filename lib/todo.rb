@@ -141,10 +141,10 @@ module Todo
     end
 
     def find_list_id(id)
-      return id unless File.exists(LISTS_PATH)
+      return id unless File.exists?(LISTS_PATH)
       return id unless id.length < 36
 
-      lists = JSON.parse(File.read(LISTS_PATH))
+      lists = YAML.load_file(LISTS_PATH)
 
       matches = lists.map { |list| list["id"] }.select do |list_id|
         list_id.start_with?(id)

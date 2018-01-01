@@ -2,6 +2,8 @@ require "spec_helper"
 require "fileutils"
 
 RSpec.describe Todo do
+  let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01")) }
+
   def todo_dir
     @todo_dir ||= File.expand_path(".todo", "spec")
   end
@@ -50,6 +52,39 @@ RSpec.describe Todo do
       expect($stdin).to receive(:gets).and_return("username", "password")
       expect(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
       Todo.run(args: ["lists"])
+    end
+
+    it "uses cached token and expires_at after authentication" do
+      expect(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
+      Todo.run(args: ["lists"])
+    end
+
+    context "when authenticated" do
+      it "prints lists" do
+        allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
+        expect { Todo.run(args: ["lists"]) }.to output(/Birthday List/).to_stdout
+        expect { Todo.run(args: ["lists"]) }.to output(/Christmas List/).to_stdout
+      end
+    end
+  end
+
+  describe ".show_list" do
+    let(:list_attributes) do
+      {
+        "name" => "Christmas List",
+        "src" => "http://todoable.teachable.tech/api/lists/123-abc",
+        "id" => "123-abc"
+      }
+    end
+
+    let(:mock_client) { double("mock client", token: "abcdef", expires_at: DateTime.parse("2081-01-01"), get_list: list_attributes) }
+
+    before(:each) do
+      allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
+    end
+
+    it "prints lists" do
+      expect { Todo.run(args: ["list", "123-abc"]) }.to output(/Christmas List/).to_stdout
     end
   end
 end
