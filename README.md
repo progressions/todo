@@ -104,7 +104,8 @@ asked to clarify:
 
 ### Finishing an item
 
-Finish an item by passing in a list ID and an item ID:
+Finish an item by passing in a list ID and an item ID. The same pattern-matching
+exists on item IDs, so you can enter shortened IDs for both lists and items:
 
     $ todo finish af0 abcc
     Grocery List (af0a0005-cfd8-4a81-8dbe-392a2d7a7075)
@@ -122,6 +123,12 @@ Finish an item by passing in a list ID and an item ID:
     --------------------------------------------------------------------------------
     Spaghetti ................................. abcc8b46-a3e3-4a85-a6ac-1741bef39b66
     Paper towels .............................. 51cc01ae-1701-440d-b3b9-2c3f66415cc6
+
+
+If you try to finish an item which is already finished, you'll be given notice:
+
+    $ bundle exec ./bin/todo finish af0 abcc
+    Item already finished.
 
 ## Further development
 

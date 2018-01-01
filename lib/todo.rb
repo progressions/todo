@@ -162,9 +162,18 @@ module Todo
         id = find_item_id(list["items"], id)
 
         if id
-          client.finish_item(list_id: list_id, id: id)
+          item = items.find { |i| i["id"] == id }
+          if item["finished_at"]
+            $stdout.puts "Item already finished."
+            $stdout.puts
+          else
+            client.finish_item(list_id: list_id, id: id)
 
-          show_list(id: list_id)
+            $stdout.puts "Item finished."
+            $stdout.puts
+
+            show_list(id: list_id)
+          end
         else
           $stdout.puts "Item not found."
           $stdout.puts
@@ -184,7 +193,7 @@ module Todo
       end
 
       if matches.length >= 2
-        $stdout.puts "The item ID you entered matches too many lists."
+        $stdout.puts "The item ID you entered matches too many items."
         $stdout.puts "Did you mean one of these?"
 
         matches.each do |match|
