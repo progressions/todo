@@ -25,22 +25,23 @@ RSpec.describe Todo do
   end
 
   before(:each) do
-    stub_const("Todo::TODO_DIR", todo_dir)
-    stub_const("Todo::USER_CONFIG_PATH", File.join(todo_dir, "user"))
-    stub_const("Todo::LISTS_PATH", File.join(todo_dir, "lists"))
-    allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
-  end
-
-  before(:all) do
     FileUtils.rm_rf(todo_dir)
+
+    allow($stdout).to receive(:puts)
+    stub_const("Todo::TODO_DIR", todo_dir)
+    stub_const("Todo::USER_CONFIG_PATH", user_config_path)
+    stub_const("Todo::LISTS_PATH", lists_path)
+
+    allow($stdin).to receive(:gets).and_return("username", "password")
+    allow(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
+    allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
+
+    # Set up all the configuration and authentication by running this once
+    Todo.client
   end
 
   after(:all) do
     FileUtils.rm_rf(todo_dir)
-  end
-
-  it "has a version number" do
-    expect(Todo::VERSION).not_to be nil
   end
 
   describe ".run" do
@@ -49,21 +50,28 @@ RSpec.describe Todo do
       expect(File.exists?(Todo::TODO_DIR)).to be_truthy
     end
 
-    it "outputs help" do
+    it "outputs help with no arguments" do
       expect($stdout).to receive(:puts).with(Todo.help)
       Todo.run
+    end
+
+    it "outputs help" do
+      expect($stdout).to receive(:puts).with(Todo.help)
+      Todo.run(args: ["help"])
     end
   end
 
   describe ".all_lists" do
     it "gets username and password" do
+      FileUtils.rm_rf(user_config_path)
+
       expect($stdin).to receive(:gets).and_return("username", "password")
       expect(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
       Todo.run(args: ["lists"])
     end
 
     it "caches token and expires_at" do
-      FileUtils.rm(user_config_path)
+      FileUtils.rm_rf(user_config_path)
 
       allow($stdin).to receive(:gets).and_return("username", "password")
       allow(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)

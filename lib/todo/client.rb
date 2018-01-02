@@ -1,6 +1,8 @@
 module Todo
   class << self
     def client
+      verify_todo_dir
+
       return client_from_username unless File.exists?(USER_CONFIG_PATH)
 
       user_profile = YAML.load_file(USER_CONFIG_PATH)
