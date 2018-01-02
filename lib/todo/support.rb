@@ -32,7 +32,7 @@ module Todo
       return nil unless id
       return id unless id.length < 36
 
-      matches = entries.map { |entry| entry["id"] }.select do |entry_id|
+      matches = Array(entries).map { |entry| entry["id"] }.select do |entry_id|
         entry_id.start_with?(id)
       end
 

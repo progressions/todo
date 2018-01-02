@@ -145,4 +145,16 @@ RSpec.describe Todo do
       expect { Todo.run(args: ["update", "123-abc", "\"Shopping List\""]) }.to output("Shopping List (123-abc)\n\n").to_stdout
     end
   end
+
+  describe ".finish_item" do
+    it "finishes an item" do
+      expect(mock_client).to receive(:finish_item).with(list_id: "123-abc", id: "987-zyx").and_return(true)
+      expect { Todo.run(args: ["finish", "123-abc", "987-zyx"]) }.to output("Item finished.\n\nChristmas List (123-abc)\n\n").to_stdout
+    end
+
+    it "lets you know if it can't finish it" do
+      expect(mock_client).to receive(:finish_item).with(list_id: "123-abc", id: "987-zyx").and_raise(Todoable::NotFound)
+      expect { Todo.run(args: ["finish", "123-abc", "987-zyx"]) }.to output("Could not finish item.\n\n").to_stdout
+    end
+  end
 end
