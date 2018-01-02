@@ -24,16 +24,16 @@ RSpec.describe Todo do
     @todo_dir ||= File.expand_path(".todo", "spec")
   end
 
+  before(:all) do
+    FileUtils.rm_rf(todo_dir)
+  end
+
   before(:each) do
     allow($stdout).to receive(:puts)
     stub_const("Todo::TODO_DIR", todo_dir)
     stub_const("Todo::USER_CONFIG_PATH", File.join(todo_dir, "user"))
     stub_const("Todo::LISTS_PATH", File.join(todo_dir, "lists"))
     allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
-  end
-
-  before(:all) do
-    FileUtils.rm_rf(todo_dir)
   end
 
   after(:all) do
