@@ -29,21 +29,19 @@ RSpec.describe Todo do
 
     allow($stdout).to receive(:puts)
     stub_const("Todo::TODO_DIR", todo_dir)
-    stub_const("Todo::USER_CONFIG_PATH", File.join(todo_dir, "user"))
-    stub_const("Todo::LISTS_PATH", File.join(todo_dir, "lists"))
+    stub_const("Todo::USER_CONFIG_PATH", user_config_path)
+    stub_const("Todo::LISTS_PATH", lists_path)
+
     allow($stdin).to receive(:gets).and_return("username", "password")
     allow(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
     allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
 
-    Todo.run(args: ["lists"])
+    # Set up all the configuration and authentication by running this once
+    Todo.client
   end
 
   after(:all) do
     FileUtils.rm_rf(todo_dir)
-  end
-
-  it "has a version number" do
-    expect(Todo::VERSION).not_to be nil
   end
 
   describe ".run" do
@@ -52,9 +50,14 @@ RSpec.describe Todo do
       expect(File.exists?(Todo::TODO_DIR)).to be_truthy
     end
 
-    it "outputs help" do
+    it "outputs help with no arguments" do
       expect($stdout).to receive(:puts).with(Todo.help)
       Todo.run
+    end
+
+    it "outputs help" do
+      expect($stdout).to receive(:puts).with(Todo.help)
+      Todo.run(args: ["help"])
     end
   end
 
@@ -82,7 +85,6 @@ RSpec.describe Todo do
     end
 
     it "uses cached token and expires_at after authentication" do
-      Todo.run(args: ["lists"])
       expect(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
       Todo.run(args: ["lists"])
     end
@@ -104,7 +106,6 @@ RSpec.describe Todo do
 
   describe ".show_list" do
     it "prints list" do
-      Todo.run(args: ["lists"])
       expect { Todo.run(args: ["list", "123-abc"]) }.to output("Christmas List (123-abc)\n\n").to_stdout
     end
 
@@ -117,7 +118,6 @@ RSpec.describe Todo do
       end
 
       it "alerts the user if the ID given is too vague" do
-        Todo.run(args: ["lists"])
         File.open(lists_path, "w") { |f| f.write(lists_attributes.to_yaml) }
         expect { Todo.run(args: ["list", "123"]) }.to output("The ID you entered matches too many IDs.\nDid you mean one of these?\n  123-abc\n  123-def\n\n").to_stdout
       end
@@ -126,7 +126,6 @@ RSpec.describe Todo do
 
   describe ".create_list" do
     it "creates list from arguments" do
-      Todo.run(args: ["lists"])
       expect(mock_client).to receive(:create_list).with(name: "\"Christmas List\"").and_return(list_attributes)
       expect { Todo.run(args: ["create", "\"Christmas List\""]) }.to output("Christmas List (123-abc)\n\n").to_stdout
     end
@@ -142,7 +141,6 @@ RSpec.describe Todo do
     end
 
     it "creates list from arguments" do
-      Todo.run(args: ["lists"])
       expect(mock_client).to receive(:update_list).with(id: "123-abc", name: "\"Shopping List\"").and_return(list_attributes)
       expect { Todo.run(args: ["update", "123-abc", "\"Shopping List\""]) }.to output("Shopping List (123-abc)\n\n").to_stdout
     end

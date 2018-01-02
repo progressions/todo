@@ -1,8 +1,6 @@
 module Todo
   class << self
     def run(args: {})
-      verify_todo_dir
-
       case args[0]
       when "create"
         create_list(name: args[1])
