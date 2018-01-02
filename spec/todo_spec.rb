@@ -25,6 +25,7 @@ RSpec.describe Todo do
   end
 
   before(:each) do
+    allow($stdout).to receive(:puts)
     stub_const("Todo::TODO_DIR", todo_dir)
     stub_const("Todo::USER_CONFIG_PATH", File.join(todo_dir, "user"))
     stub_const("Todo::LISTS_PATH", File.join(todo_dir, "lists"))
