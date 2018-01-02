@@ -68,19 +68,16 @@ module Todo
 
     def finish_item(list_id:, id:)
       with_item(list_id: list_id, id: id) do |list_id, id|
-        item = items.find { |i| i["id"] == id }
-        if item["finished_at"]
-          $stdout.puts "Item already finished."
-          $stdout.puts
-        else
-          client.finish_item(list_id: list_id, id: id)
+        client.finish_item(list_id: list_id, id: id)
 
-          $stdout.puts "Item finished."
-          $stdout.puts
+        $stdout.puts "Item finished."
+        $stdout.puts
 
-          show_list(id: list_id)
-        end
+        show_list(id: list_id)
       end
+    rescue Todoable::NotFound
+      $stdout.puts "Could not finish item."
+      $stdout.puts
     end
 
     def create_list(name:)

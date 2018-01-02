@@ -128,7 +128,7 @@ exists on item IDs, so you can enter shortened IDs for both lists and items:
 If you try to finish an item which is already finished, you'll be given notice:
 
     $ bundle exec ./bin/todo finish af0 abcc
-    Item already finished.
+    Could not finish item.
 
 ## Further development
 
