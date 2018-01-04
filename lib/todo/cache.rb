@@ -3,7 +3,7 @@ require "redis"
 module Todo
   class << self
     def cache
-      Cache::FileSystem
+      # Cache::FileSystem
       Cache::Redis
     end
   end
