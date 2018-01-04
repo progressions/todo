@@ -36,7 +36,7 @@ module Todo
         end
 
         def save_lists(lists)
-          redis.set("lists", lists.to_json)
+          redis.set("lists", lists.to_json, ex: 60)
         end
 
         def user_profile
@@ -53,7 +53,7 @@ module Todo
             expires_at: expires_at,
           }
 
-          redis.set("user_profile", user_profile.to_json)
+          redis.set("user_profile", user_profile.to_json, ex: 1_200)
         end
 
         def clear
