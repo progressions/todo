@@ -1,3 +1,5 @@
+require "fileutils"
+
 RSpec.describe Todo do
   let(:lists_attributes) do
     [
@@ -14,21 +16,10 @@ RSpec.describe Todo do
     }
   end
 
-  def todo_dir
-    @todo_dir ||= File.expand_path(".todo", "spec")
-  end
-
   let(:mock_client) { double("mock client", lists: lists_attributes, get_list: list_attributes, authenticate!: ["abcdef", DateTime.parse("2081-01-01")]) }
-  let(:user_profile_path) { File.join(todo_dir, "user") }
-  let(:lists_path) { File.join(todo_dir, "lists") }
 
   before(:each) do
-    Todo.cache.clear
-
     allow($stdout).to receive(:puts)
-    stub_const("Todo::Cache::TODO_DIR", todo_dir)
-    stub_const("Todo::Cache::USER_PROFILE_PATH", user_profile_path)
-    stub_const("Todo::Cache::LISTS_PATH", lists_path)
 
     allow($stdin).to receive(:gets).and_return("username", "password")
     allow(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
@@ -38,16 +29,7 @@ RSpec.describe Todo do
     Todo.client
   end
 
-  after(:all) do
-    Todo.cache.clear
-  end
-
   describe ".run" do
-    it "creates .todo directory" do
-      Todo.run
-      expect(File.exists?(Todo.cache::TODO_DIR)).to be_truthy
-    end
-
     it "outputs help with no arguments" do
       expect($stdout).to receive(:puts).with(Todo.help)
       Todo.run
@@ -117,6 +99,7 @@ RSpec.describe Todo do
 
       it "alerts the user if the ID given is too vague" do
         Todo.cache.save_lists(lists_attributes)
+
         expect { Todo.run(args: ["list", "123"]) }.to output("The ID you entered matches too many IDs.\nDid you mean one of these?\n  123-abc\n  123-def\n\n").to_stdout
       end
     end

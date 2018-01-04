@@ -25,7 +25,7 @@ module Todo
           user_json = redis.get("user_profile")
           JSON.parse(user_json)
         rescue StandardError
-          raise "WTF"
+          nil
         end
 
         def save_user_profile(username:, token:, expires_at:)
@@ -35,7 +35,7 @@ module Todo
             expires_at: expires_at,
           }
 
-          redis.set("user_profile", user_profile)
+          redis.set("user_profile", user_profile.to_json)
         end
 
         def clear
