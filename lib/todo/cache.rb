@@ -3,8 +3,8 @@ require "redis"
 module Todo
   class << self
     def cache
-      # Cache::FileSystem
       Cache::Redis
+      Cache::FileSystem
     end
   end
 
@@ -52,15 +52,11 @@ module Todo
     end
 
     module FileSystem
-      TODO_DIR = File.join(Dir.home, ".todo")
-      USER_PROFILE_PATH = File.join(TODO_DIR, "user")
-      LISTS_PATH = File.join(TODO_DIR, "lists")
-
       class << self
         def lists
           verify_cache
 
-          JSON.parse(File.read(LISTS_PATH))
+          JSON.parse(File.read(lists_path))
         rescue StandardError
           nil
         end
@@ -68,13 +64,13 @@ module Todo
         def save_lists(lists)
           verify_cache
 
-          File.write(LISTS_PATH, lists.to_json)
+          File.write(lists_path, lists.to_json)
         end
 
         def user_profile
           verify_cache
 
-          user_json = File.read(USER_PROFILE_PATH)
+          user_json = File.read(user_profile_path)
           JSON.parse(user_json) if user_json
         rescue StandardError
           nil
@@ -89,19 +85,31 @@ module Todo
             expires_at: expires_at,
           }
 
-          File.open(USER_PROFILE_PATH, "w") do |f|
+          File.open(user_profile_path, "w") do |f|
             f.write(user_profile.to_json)
           end
         end
 
         def clear
-          FileUtils.rm_rf(TODO_DIR)
+          FileUtils.rm_rf(todo_dir)
         end
 
         private
 
         def verify_cache
-          Dir.mkdir(TODO_DIR) unless File.exists?(TODO_DIR)
+          Dir.mkdir(todo_dir) unless File.exists?(todo_dir)
+        end
+
+        def todo_dir
+          @todo_dir ||= File.join(Dir.home, ".todo")
+        end
+
+        def user_profile_path
+          File.join(todo_dir, "user")
+        end
+
+        def lists_path
+          File.join(todo_dir, "lists")
         end
       end
     end
