@@ -11,7 +11,7 @@ PATH
   remote: .
   specs:
     todo (0.4.0)
-      redis
+      redis (~> 4.0.1)
 
 GEM
   remote: https://rubygems.org/
