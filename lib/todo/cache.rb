@@ -8,19 +8,19 @@ module Todo
 
     class << self
       def lists
-        verify_todo_dir
+        verify_cache
 
         YAML.load_file(LISTS_PATH)
       end
 
       def save_lists(lists)
-        verify_todo_dir
+        verify_cache
 
         File.write(LISTS_PATH, lists.to_json)
       end
 
       def user_profile
-        verify_todo_dir
+        verify_cache
 
         user_json = File.read(USER_PROFILE_PATH)
         JSON.parse(user_json) if user_json
@@ -29,7 +29,7 @@ module Todo
       end
 
       def save_user_profile(username:, token:, expires_at:)
-        verify_todo_dir
+        verify_cache
 
         user_profile = {
           username: username,
@@ -48,7 +48,7 @@ module Todo
 
       private
 
-      def verify_todo_dir
+      def verify_cache
         Dir.mkdir(TODO_DIR) unless File.exists?(TODO_DIR)
       end
     end
