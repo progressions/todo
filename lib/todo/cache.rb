@@ -4,17 +4,11 @@ require "redis"
 module Todo
   class << self
     def cache
-      if todorc[:cache] == "redis"
+      if todorc["redis"]
         Cache::Redis
       else
         Cache::FileSystem
       end
-    end
-
-    private
-
-    def config_path
-      File.join(Dir.home, ".todorc")
     end
 
     def todorc
@@ -23,6 +17,12 @@ module Todo
       else
         {}
       end
+    end
+
+    private
+
+    def config_path
+      File.join(Dir.home, ".todorc")
     end
   end
 
@@ -66,7 +66,11 @@ module Todo
         private
 
         def redis
-          @redis ||= ::Redis.new
+          @redis ||= ::Redis.new(redis_config)
+        end
+
+        def redis_config
+          Todo.todorc["redis"]
         end
       end
     end
