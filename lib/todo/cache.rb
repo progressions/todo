@@ -57,8 +57,10 @@ module Todo
         end
 
         def clear
-          redis.set("user_profile", nil)
-          redis.set("lists", nil)
+          redis.pipelined do
+            redis.del("user_profile")
+            redis.del("lists")
+          end
         end
 
         private
