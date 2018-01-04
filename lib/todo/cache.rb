@@ -40,7 +40,7 @@ module Todo
         end
 
         def user_profile
-          user_json = redis.get("user_profile")
+          user_json = redis.get("user")
           JSON.parse(user_json)
         rescue StandardError
           nil
@@ -53,12 +53,12 @@ module Todo
             expires_at: expires_at,
           }
 
-          redis.set("user_profile", user_profile.to_json, ex: 1_200)
+          redis.set("user", user_profile.to_json, ex: 1_200)
         end
 
         def clear
           redis.pipelined do
-            redis.del("user_profile")
+            redis.del("user")
             redis.del("lists")
           end
         end
