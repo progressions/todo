@@ -1,5 +1,3 @@
-require "yaml"
-
 module Todo
   module Cache
     TODO_DIR = File.join(Dir.home, ".todo")
@@ -10,7 +8,9 @@ module Todo
       def lists
         verify_cache
 
-        YAML.load_file(LISTS_PATH)
+        JSON.parse(File.read(LISTS_PATH))
+      rescue StandardError
+        nil
       end
 
       def save_lists(lists)

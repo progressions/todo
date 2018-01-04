@@ -1,7 +1,1 @@
----
-- name: Christmas List
-  src: http://todoable.teachable.tech/api/lists/123-abc
-  id: 123-abc
-- name: Birthday List
-  src: http://todoable.teachable.tech/api/lists/456-def
-  id: 123-def
+[{"name":"Christmas List","src":"http://todoable.teachable.tech/api/lists/123-abc","id":"123-abc"},{"name":"Birthday List","src":"http://todoable.teachable.tech/api/lists/456-def","id":"123-def"}]
