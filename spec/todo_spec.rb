@@ -21,12 +21,17 @@ RSpec.describe Todo do
   before(:each) do
     allow($stdout).to receive(:puts)
 
+    allow(Dir).to receive(:home).and_return(File.expand_path("spec"))
     allow($stdin).to receive(:gets).and_return("username", "password")
     allow(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
     allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
 
     # Set up all the configuration and authentication by running this once
     Todo.client
+  end
+
+  after(:each) do
+    Todo.cache.clear
   end
 
   describe ".run" do

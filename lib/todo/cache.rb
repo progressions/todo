@@ -1,10 +1,26 @@
+require "yaml"
 require "redis"
 
 module Todo
   class << self
     def cache
-      Cache::Redis
-      Cache::FileSystem
+      if todorc[:cache] == "redis"
+        Cache::Redis
+      else
+        Cache::FileSystem
+      end
+    end
+
+    def config_path
+      File.join(Dir.home, ".todorc")
+    end
+
+    def todorc
+      if File.exists?(config_path)
+        YAML.load_file(config_path)
+      else
+        {}
+      end
     end
   end
 
