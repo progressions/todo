@@ -23,7 +23,7 @@ RSpec.describe Todo do
   let(:lists_path) { File.join(todo_dir, "lists") }
 
   before(:each) do
-    Todo::Cache.clear
+    Todo.cache.clear
 
     allow($stdout).to receive(:puts)
     stub_const("Todo::Cache::TODO_DIR", todo_dir)
@@ -39,13 +39,13 @@ RSpec.describe Todo do
   end
 
   after(:all) do
-    Todo::Cache.clear
+    Todo.cache.clear
   end
 
   describe ".run" do
     it "creates .todo directory" do
       Todo.run
-      expect(File.exists?(Todo::Cache::TODO_DIR)).to be_truthy
+      expect(File.exists?(Todo.cache::TODO_DIR)).to be_truthy
     end
 
     it "outputs help with no arguments" do
@@ -61,7 +61,7 @@ RSpec.describe Todo do
 
   describe ".all_lists" do
     it "gets username and password" do
-      Todo::Cache.clear
+      Todo.cache.clear
 
       expect($stdin).to receive(:gets).and_return("username", "password")
       expect(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
@@ -69,14 +69,14 @@ RSpec.describe Todo do
     end
 
     it "caches token and expires_at" do
-      Todo::Cache.clear
+      Todo.cache.clear
 
       allow($stdin).to receive(:gets).and_return("username", "password")
       allow(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
 
       Todo.run(args: ["lists"])
 
-      user_profile = Todo::Cache.user_profile
+      user_profile = Todo.cache.user_profile
       expect(user_profile["username"]).to eq("username")
       expect(user_profile["token"]).to eq("abcdef")
       expect(user_profile["expires_at"].to_s).to eq("2081-01-01T00:00:00+00:00")
@@ -96,7 +96,7 @@ RSpec.describe Todo do
       it "caches lists" do
         Todo.run(args: ["lists"])
 
-        lists = Todo::Cache.lists
+        lists = Todo.cache.lists
         expect(lists).to eq(lists_attributes)
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe Todo do
       end
 
       it "alerts the user if the ID given is too vague" do
-        Todo::Cache.save_lists(lists_attributes)
+        Todo.cache.save_lists(lists_attributes)
         expect { Todo.run(args: ["list", "123"]) }.to output("The ID you entered matches too many IDs.\nDid you mean one of these?\n  123-abc\n  123-def\n\n").to_stdout
       end
     end

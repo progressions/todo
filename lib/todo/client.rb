@@ -1,7 +1,7 @@
 module Todo
   class << self
     def client
-      user_profile = Cache.user_profile
+      user_profile = cache.user_profile
       return client_from_username unless user_profile
 
       @client = Todoable::Client.new(
@@ -25,7 +25,7 @@ module Todo
       )
       token, expires_at = @client.authenticate!
 
-      Cache.save_user_profile(
+      cache.save_user_profile(
         username: username,
         token: token,
         expires_at: expires_at,

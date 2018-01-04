@@ -21,7 +21,7 @@ module Todo
     end
 
     def find_list_id(id)
-      return id unless lists = Cache.lists
+      return id unless lists = cache.lists
 
       find_matching_ids(lists, id)
     end

@@ -8,7 +8,7 @@ module Todo
     def get_all_lists
       lists = client.lists
 
-      Cache.save_lists(lists)
+      cache.save_lists(lists)
 
       lists
     end
