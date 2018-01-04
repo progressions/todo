@@ -11,6 +11,8 @@ module Todo
       end
     end
 
+    private
+
     def config_path
       File.join(Dir.home, ".todorc")
     end
