@@ -1,5 +1,3 @@
-require "fileutils"
-
 RSpec.describe Todo do
   let(:lists_attributes) do
     [
