@@ -1,11 +1,56 @@
+require "redis"
+
 module Todo
   class << self
     def cache
       Cache::FileSystem
+      Cache::Redis
     end
   end
 
   module Cache
+    module Redis
+      class << self
+        def lists
+          JSON.parse(redis.get("lists"))
+        rescue StandardError
+          nil
+        end
+
+        def save_lists(lists)
+          redis.set("lists", lists.to_json)
+        end
+
+        def user_profile
+          user_json = redis.get("user_profile")
+          JSON.parse(user_json)
+        rescue StandardError
+          raise "WTF"
+        end
+
+        def save_user_profile(username:, token:, expires_at:)
+          user_profile = {
+            username: username,
+            token: token,
+            expires_at: expires_at,
+          }
+
+          redis.set("user_profile", user_profile)
+        end
+
+        def clear
+          redis.set("user_profile", nil)
+          redis.set("lists", nil)
+        end
+
+        private
+
+        def redis
+          @redis ||= ::Redis.new
+        end
+      end
+    end
+
     module FileSystem
       TODO_DIR = File.join(Dir.home, ".todo")
       USER_PROFILE_PATH = File.join(TODO_DIR, "user")
