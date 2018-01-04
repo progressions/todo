@@ -8,7 +8,7 @@ module Todo
     def get_all_lists
       lists = client.lists
 
-      File.write(LISTS_PATH, lists.to_yaml)
+      Cache.save_lists(lists)
 
       lists
     end

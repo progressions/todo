@@ -21,9 +21,7 @@ module Todo
     end
 
     def find_list_id(id)
-      return id unless File.exists?(LISTS_PATH)
-
-      lists = YAML.load_file(LISTS_PATH)
+      return id unless lists = Cache.lists
 
       find_matching_ids(lists, id)
     end
