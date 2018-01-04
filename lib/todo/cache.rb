@@ -36,7 +36,7 @@ module Todo
         end
 
         def save_lists(lists)
-          redis.set("lists", lists.to_json, ex: 60)
+          redis.set("lists", lists.to_json, ex: 600)
         end
 
         def user_profile
