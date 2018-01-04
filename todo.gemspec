@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
-  spec.add_dependency "redis"
+  spec.add_dependency "redis", "~> 4.0.1"
 
   # get an array of submodule dirs by executing 'pwd' inside each submodule
   gem_dir = File.expand_path(File.dirname(__FILE__)) + "/"
