@@ -2,6 +2,7 @@ require "io/console"
 
 require "todo/version"
 require "todo/run"
+require "todo/configuration"
 require "todo/client"
 require "todo/cache"
 require "todo/support"

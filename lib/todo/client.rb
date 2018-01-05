@@ -6,7 +6,8 @@ module Todo
 
       @client = Todoable::Client.new(
         token: user_profile["token"],
-        expires_at: user_profile["expires_at"]
+        expires_at: user_profile["expires_at"],
+        base_uri: todorc["base_uri"],
       )
       @client.authenticate!
 
@@ -22,6 +23,7 @@ module Todo
       @client = Todoable::Client.new(
         username: username,
         password: password,
+        base_uri: todorc["base_uri"],
       )
       token, expires_at = @client.authenticate!
 
