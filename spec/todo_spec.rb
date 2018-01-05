@@ -21,8 +21,8 @@ RSpec.describe Todo do
 
     allow(Dir).to receive(:home).and_return(File.expand_path("spec"))
     allow($stdin).to receive(:gets).and_return("username", "password")
-    allow(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
-    allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
+    allow(Todoable::Client).to receive(:new).with(username: "username", password: "password", base_uri: nil).and_return(mock_client)
+    allow(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything, base_uri: nil).and_return(mock_client)
 
     # Set up all the configuration and authentication by running this once
     Todo.client
@@ -49,7 +49,7 @@ RSpec.describe Todo do
       Todo.cache.clear
 
       expect($stdin).to receive(:gets).and_return("username", "password")
-      expect(Todoable::Client).to receive(:new).with({:username=>"username", :password=>"password"}).and_return(mock_client)
+      expect(Todoable::Client).to receive(:new).with(username: "username", password: "password", base_uri: nil).and_return(mock_client)
       Todo.run(args: ["lists"])
     end
 
@@ -68,7 +68,7 @@ RSpec.describe Todo do
     end
 
     it "uses cached token and expires_at after authentication" do
-      expect(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything).and_return(mock_client)
+      expect(Todoable::Client).to receive(:new).with(token: "abcdef", expires_at: anything, base_uri: nil).and_return(mock_client)
       Todo.run(args: ["lists"])
     end
 
