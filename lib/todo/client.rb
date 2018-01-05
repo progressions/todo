@@ -17,7 +17,7 @@ module Todo
     end
 
     def client_from_username
-      username = question("Enter username: ")
+      username = todorc["username"] || question("Enter username: ")
       password = question("Enter password: ", noecho: true)
 
       @client = Todoable::Client.new(

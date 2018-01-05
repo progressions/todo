@@ -82,8 +82,8 @@ module Todo
 
     def create_list(name:)
       list = client.create_list(name: name)
-      List.show(list)
       get_all_lists
+      List.show(list)
     end
 
     def create_item(list_id:, name:)
