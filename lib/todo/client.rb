@@ -38,6 +38,10 @@ module Todo
       )
 
       @client
+    rescue Todoable::Unauthorized
+      $stdout.puts "Could not authenticate."
+
+      exit 1
     end
 
   end
