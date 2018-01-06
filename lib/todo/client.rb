@@ -1,15 +1,13 @@
 module Todo
   class << self
     def client
-      verify_todo_dir
-
-      return client_from_username unless File.exists?(USER_CONFIG_PATH)
-
-      user_profile = YAML.load_file(USER_CONFIG_PATH)
+      user_profile = cache.user_profile
+      return client_from_username unless user_profile
 
       @client = Todoable::Client.new(
-        token: user_profile[:token],
-        expires_at: user_profile[:expires_at]
+        token: user_profile["token"],
+        expires_at: user_profile["expires_at"],
+        base_uri: todorc["base_uri"],
       )
       @client.authenticate!
 
@@ -19,16 +17,17 @@ module Todo
     end
 
     def client_from_username
-      username = question("Enter username: ")
+      username = todorc["username"] || question("Enter username: ")
       password = question("Enter password: ", noecho: true)
 
       @client = Todoable::Client.new(
         username: username,
         password: password,
+        base_uri: todorc["base_uri"],
       )
       token, expires_at = @client.authenticate!
 
-      save_user_config(
+      cache.save_user_profile(
         username: username,
         token: token,
         expires_at: expires_at,

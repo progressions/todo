@@ -130,6 +130,29 @@ If you try to finish an item which is already finished, you'll be given notice:
     $ bundle exec ./bin/todo finish af0 abcc
     Could not finish item.
 
+## Configuration
+
+Configure the `todo` client with an optional `~/.todorc` file.
+
+### Options
+
+The `todo` client caches some list information to make it easier to match IDs.
+
+You can configure the cache to use Redis, or to use the local filesystem.
+
+The default is the local filesystem. If you wish to use Redis, define the
+configuration options for your local Redis instance.
+
+- redis
+- base_uri - the URI of the Todoable server
+- username - your username on the Todoable server
+
+    redis:
+      host: <url of redis instance>
+      password: <redis password>
+    base_uri: http://localhost:4000/api
+    username: username
+
 ## Further development
 
 This is a very rough proof of concept. If I were to develop this further, there are a
