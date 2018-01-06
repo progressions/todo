@@ -147,6 +147,8 @@ configuration options for your local Redis instance.
 - base_uri - the URI of the Todoable server
 - username - your username on the Todoable server
 
+Example:
+
     redis:
       host: <url of redis instance>
       password: <redis password>
