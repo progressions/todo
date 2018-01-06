@@ -20,8 +20,12 @@ module Todo
         $stdout.puts help
       end
     rescue Todoable::Unauthorized
-      $stdout.puts "Unauthorized"
+      $stdout.puts "Could not authenticate."
       $stdout.puts
+    rescue Errno::ECONNREFUSED
+      $stdout.puts "Could not reach server."
+
+      exit 1
     end
   end
 end
