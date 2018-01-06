@@ -14,6 +14,10 @@ module Todo
       @client
     rescue Todoable::Unauthorized
       client_from_username
+    rescue Errno::ECONNREFUSED
+      $stdout.puts "Could not reach server."
+
+      exit 1
     end
 
     def client_from_username
