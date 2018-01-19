@@ -96,5 +96,10 @@ module Todo
         show_list(id: list_id)
       end
     end
+
+    def logout
+      @client = nil
+      Todo.cache.clear
+    end
   end
 end

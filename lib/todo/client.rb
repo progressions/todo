@@ -43,6 +43,5 @@ module Todo
 
       exit 1
     end
-
   end
 end

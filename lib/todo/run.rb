@@ -14,12 +14,16 @@ module Todo
         show_list(id: args[1])
       when "lists"
         all_lists
+      when "logout"
+        logout
       when "update"
         update_list(id: args[1], name: args[2])
       else
         $stdout.puts help
       end
     rescue Todoable::Unauthorized
+      logout
+
       $stdout.puts "Could not authenticate."
       $stdout.puts
     rescue Errno::ECONNREFUSED

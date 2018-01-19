@@ -141,4 +141,14 @@ RSpec.describe Todo do
       expect { Todo.run(args: ["finish", "123-abc", "987-zyx"]) }.to output("Could not finish item.\n\n").to_stdout
     end
   end
+
+  describe ".logout" do
+    it "logs out when authenticated" do
+      Todo.run(args: ["logout"])
+
+      allow($stdin).to receive(:gets).and_return("username", "password")
+      expect(Todoable::Client).to receive(:new).with(username: "username", password: "password", base_uri: nil).and_return(mock_client)
+      Todo.run(args: ["lists"])
+    end
+  end
 end
