@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    todo (0.4.1)
+    todo (0.4.2)
       redis (~> 4.0.1)
 
 GEM
