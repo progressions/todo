@@ -170,8 +170,8 @@ This CLI gem contains a git submodule link to the `todoable` gem, which is the R
 To update the submodule, run:
 
 ```
-cd lib/todo
-git submodule update tododable
+cd lib
+git submodule update --init todoable
 ```
 
 After checking out the repo, run `bin/setup` to install dependencies. Then,
