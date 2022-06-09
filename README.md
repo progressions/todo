@@ -165,6 +165,15 @@ couple of things I'd want to tackle first:
 
 ## Development
 
+This CLI gem contains a git submodule link to the `todoable` gem, which is the Ruby client that communicates with the server.
+
+To update the submodule, run:
+
+```
+cd lib/todo
+git submodule update tododable
+```
+
 After checking out the repo, run `bin/setup` to install dependencies. Then,
 run `rake spec` to run the tests. You can also run `bin/console` for an
 interactive prompt that will allow you to experiment.
